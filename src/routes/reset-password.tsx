@@ -39,7 +39,7 @@ function ResetPassword() {
     try {
       passwordSchema.parse(password);
     } catch {
-      toast.error("Password must be at least 6 characters.");
+      toast.error("Password must be at least 6 and 72 characters.");
       return;
     }
     setLoading(true);
