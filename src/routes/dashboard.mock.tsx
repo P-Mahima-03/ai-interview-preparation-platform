@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   PlayCircle,
@@ -73,20 +73,25 @@ function MockInterviewPage() {
 
   async function startInterview() {
     if (!user) return;
+
     let query = supabase
       .from("questions")
       .select("id, title, question, difficulty, interview_categories(name)")
       .limit(40);
+
     if (category !== "any") query = query.eq("category_id", category);
     if (difficulty !== "any") query = query.eq("difficulty", difficulty as Question["difficulty"]);
 
     const { data, error } = await query;
+
     if (error || !data || data.length === 0) {
       toast.error("No questions found for that filter.");
       return;
     }
+
     // Shuffle and take TOTAL_QUESTIONS
     const shuffled = [...data].sort(() => Math.random() - 0.5).slice(0, TOTAL_QUESTIONS);
+
     setQuestions(shuffled as Question[]);
     setAnswers(new Array(shuffled.length).fill(""));
     setIdx(0);
@@ -99,6 +104,7 @@ function MockInterviewPage() {
       setStage("setup");
       return;
     }
+
     const generated = generateFeedback(answers);
     setFeedback(generated);
     setStage("result");
@@ -118,6 +124,7 @@ function MockInterviewPage() {
         })
         .select("id")
         .single();
+
       if (mockErr) throw mockErr;
 
       await supabase.from("feedback").insert({
@@ -321,10 +328,14 @@ function ActiveView({
           {question.question}
         </p>
         <div className="mt-6">
-          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          <label
+            htmlFor="mock-answer"
+            className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground"
+          >
             Your Answer
           </label>
           <Textarea
+            id="mock-answer"
             value={answer}
             onChange={(e) => onAnswer(e.target.value)}
             placeholder="Explain your approach. Pretend you're talking to your interviewer…"
@@ -364,14 +375,24 @@ function ResultView({
   onReset: () => void;
 }) {
   const scores = [
-    { label: "Technical", value: feedback.technical, icon: Brain, color: "var(--brand-blue)" },
+    {
+      label: "Technical",
+      value: feedback.technical,
+      icon: Brain,
+      color: "var(--brand-blue)",
+    },
     {
       label: "Communication",
       value: feedback.communication,
       icon: MessageCircle,
       color: "var(--brand-purple)",
     },
-    { label: "Confidence", value: feedback.confidence, icon: TrendingUp, color: "var(--primary)" },
+    {
+      label: "Confidence",
+      value: feedback.confidence,
+      icon: TrendingUp,
+      color: "var(--primary)",
+    },
     {
       label: "Problem Solving",
       value: feedback.problemSolving,
@@ -379,6 +400,7 @@ function ResultView({
       color: "var(--brand-violet)",
     },
   ];
+
   return (
     <div className="space-y-6">
       <div className="bg-brand-gradient relative overflow-hidden rounded-3xl p-8 text-white shadow-elegant">
@@ -413,7 +435,10 @@ function ResultView({
             <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted">
               <div
                 className="h-full rounded-full"
-                style={{ width: `${s.value}%`, backgroundColor: s.color }}
+                style={{
+                  width: `${s.value}%`,
+                  backgroundColor: s.color,
+                }}
               />
             </div>
           </div>
@@ -447,6 +472,7 @@ function FeedbackList({
 }) {
   const dotClass =
     tone === "success" ? "bg-success" : tone === "warning" ? "bg-warning" : "bg-primary";
+
   return (
     <div className="rounded-2xl border border-border bg-card p-6">
       <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">{title}</h3>
