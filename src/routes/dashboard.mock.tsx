@@ -352,11 +352,19 @@ function ActiveView({
           <StopCircle className="mr-1 size-4" /> End Interview
         </Button>
         {idx < total - 1 ? (
-          <Button onClick={onNext} className="bg-brand-gradient text-white">
+          <Button
+            onClick={onNext}
+            disabled={!answer.trim()}
+            className="bg-brand-gradient text-white"
+          >
             Next <ChevronRight className="ml-1 size-4" />
           </Button>
         ) : (
-          <Button onClick={onEnd} className="bg-brand-gradient text-white">
+          <Button
+            onClick={onEnd}
+            disabled={!answer.trim()}
+            className="bg-brand-gradient text-white"
+          >
             Finish & Get Feedback
           </Button>
         )}
