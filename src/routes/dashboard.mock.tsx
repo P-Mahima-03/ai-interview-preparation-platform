@@ -294,7 +294,7 @@ function ActiveView({
   onEnd: () => void;
 }) {
   const pct = Math.min(100, ((idx + 1) / total) * 100);
-  const qSeconds = elapsed % SECONDS_PER_QUESTION;
+  const qSeconds = Math.min(elapsed, SECONDS_PER_QUESTION);
   const remaining = Math.max(0, SECONDS_PER_QUESTION - qSeconds);
 
   return (
