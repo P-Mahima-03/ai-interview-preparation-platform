@@ -41,9 +41,9 @@ function AuthPage() {
   async function handleEmail(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    const email = String(fd.get("email") ?? "");
+    const email = String(fd.get("email") ?? "").trim();
     const password = String(fd.get("password") ?? "");
-    const fullName = String(fd.get("fullName") ?? "");
+    const fullName = String(fd.get("fullName") ?? "").trim();
 
     try {
       emailSchema.parse(email);
