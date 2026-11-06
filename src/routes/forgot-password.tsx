@@ -22,9 +22,9 @@ function ForgotPassword() {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    const email = String(fd.get("email") ?? "");
+    let email: string;
     try {
-      emailSchema.parse(email);
+      email = emailSchema.parse(String(fd.get("email") ?? ""));
     } catch {
       toast.error("Please enter a valid email.");
       return;
